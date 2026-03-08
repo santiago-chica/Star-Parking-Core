@@ -36,7 +36,7 @@ public class Bill {
     private ParkingUse parkingUse;
 
     @CreationTimestamp
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private OffsetDateTime createdAt;
 
     @Column(nullable = false, check = @CheckConstraint(name = "subtotal_constraint", constraint = "subtotal >= 0"))

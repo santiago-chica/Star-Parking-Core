@@ -35,7 +35,12 @@ public class Activity {
     private String ipAddress;
 
     @CreationTimestamp
-    @Column(nullable = false)
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+    )
     private OffsetDateTime createdAt;
 
 }
