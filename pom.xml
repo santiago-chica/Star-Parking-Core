@@ -56,7 +56,8 @@
 		<!-- MySQL Connector -->
 		<dependency>
 			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.33</version> <!-- or another compatible 8.x version -->
 			<scope>runtime</scope>
 		</dependency>
 
@@ -81,9 +82,11 @@
 
 		<!-- Spring AI (experimental, requires Spring Boot 3.2+) -->
 		<dependency>
-			<groupId>org.springframework.experimental</groupId>
-			<artifactId>spring-ai-starter</artifactId>
-			<version>0.0.1</version>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-bom</artifactId>
+			<version>1.0.0</version>
+			<type>pom</type>
+			<scope>import</scope>
 		</dependency>
 	</dependencies>
 
