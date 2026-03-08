@@ -2,6 +2,7 @@ package com.ministerio.starparking.client.model;
 
 import com.ministerio.starparking.bill.model.Bill;
 import com.ministerio.starparking.common.enums.DocumentType;
+import com.ministerio.starparking.subscriptionlog.model.SubscriptionLog;
 import com.ministerio.starparking.vehicle.model.Vehicle;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -30,7 +31,7 @@ public class Client {
     @Column(nullable = false, length = 16)
     private DocumentType documentType;
 
-    @Column(nullable = false, check = @CheckConstraint(constraint = "documentNumber > 0"))
+    @Column(nullable = false, check = @CheckConstraint(constraint = "document_number > 0"))
     private Long documentNumber;
 
     @Column(length = 64)
@@ -58,6 +59,9 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private List<Bill> bills;
+
+    @OneToMany(mappedBy = "client")
+    private List<SubscriptionLog> subscriptionLogs;
 
 
 }

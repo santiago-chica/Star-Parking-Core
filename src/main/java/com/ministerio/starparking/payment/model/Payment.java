@@ -1,7 +1,7 @@
-package com.ministerio.starparking.parkingspot.model;
+package com.ministerio.starparking.payment.model;
 
-import com.ministerio.starparking.parkinguse.model.ParkingUse;
-import com.ministerio.starparking.vehicle.model.Vehicle;
+import com.ministerio.starparking.bill.model.Bill;
+import com.ministerio.starparking.common.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,28 +9,31 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Table(name = "parking_spot")
-public class ParkingSpot {
+@Table(name = "payment")
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 32)
-    private String spotIdentifier;
+    @Column(check = @CheckConstraint(constraint = "amount >= 0"))
+    private BigDecimal amount;
 
-    @OneToOne
-    @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
+    @OneToOne(mappedBy = "payment")
+    private Bill bill;
 
-    @OneToMany(mappedBy = "parkingSpot", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<ParkingUse> parkingUses;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentMethod paymentMethod;
+
+    @Column(length = 64)
+    private String paymentReference;
 
     @CreationTimestamp
     @Column(nullable = false)
@@ -39,4 +42,6 @@ public class ParkingSpot {
     @UpdateTimestamp
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
+
+
 }

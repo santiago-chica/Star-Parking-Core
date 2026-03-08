@@ -27,7 +27,7 @@ public class VehicleType {
     @Column(length = 128)
     private String description;
 
-    @Column(nullable = false, check = @CheckConstraint(constraint = "costPerMinute >= 0"))
+    @Column(nullable = false, check = @CheckConstraint(constraint = "cost_per_minute >= 0"))
     private Float costPerMinute;
 
     @CreationTimestamp

@@ -21,10 +21,10 @@ public class ParkingUse {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "vehicleId", nullable = false)
+    @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
     @ManyToOne
-    @JoinColumn(name = "parkingSpotId", nullable = false)
+    @JoinColumn(name = "parking_spot_id", nullable = false)
     private ParkingSpot parkingSpot;
 
     @Column(nullable = false)
@@ -33,13 +33,14 @@ public class ParkingUse {
     private OffsetDateTime exitTime;
 
     @Column(
-            nullable = false,
             insertable = false,
             updatable = false,
-            columnDefinition = "INT GENERATED ALWAYS AS (EXTRACT(EPOCH FROM (exit_time - entry_time)) / 60) STORED"
+            columnDefinition = "INT AS (TIMESTAMPDIFF(MINUTE, entry_time, exit_time)) STORED"
     )
     private Integer stayMinutes;
 
+    @OneToOne
+    @JoinColumn(name = "bill_id")
     private Bill bill;
 
 

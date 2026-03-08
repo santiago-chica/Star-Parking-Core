@@ -1,5 +1,6 @@
 package com.ministerio.starparking.user.model;
 
+import com.ministerio.starparking.activity.model.Activity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Entity
 @Setter
@@ -24,6 +26,7 @@ public class User {
     @Column(length = 128, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String passwordHash;
 
     @Column(nullable = false)
@@ -31,6 +34,9 @@ public class User {
 
     @Column(nullable = false)
     private OffsetDateTime lastSeen;
+
+    @OneToMany(mappedBy = "user")
+    private List<Activity> activities;
 
     @CreationTimestamp
     @Column(nullable = false)

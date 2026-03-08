@@ -57,6 +57,6 @@ public class Vehicle {
     private OffsetDateTime updatedAt;
 
     @OneToMany(orphanRemoval = true, mappedBy = "vehicle", cascade = CascadeType.ALL)
-    List<ParkingUse> parkingUses;
+    private List<ParkingUse> parkingUses;
 
 }
