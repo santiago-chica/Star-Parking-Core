@@ -25,3 +25,22 @@ El sistema permite:
 - Optimizar tiempos de acceso y salida.
 - Mejorar la seguridad mediante validación automática.
 - Implementar soluciones tecnológicas escalables y modernas.
+
+## Setup
+En application.properties se tienen las siguientes definiciones
+
+```
+spring.application.name=Star Parking Core
+
+server.port=8080
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://localhost:3306/star-parking-dev
+
+spring.datasource.username=root
+spring.datasource.password=
+
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.show-sql=true
+```
+
+Para ver documentación en http://localhost:8080/swagger-ui/index.html
