@@ -23,7 +23,7 @@ public class ClientService {
 
     public ClientResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún cliente con el ID: " + id)));
     }
 
     public ClientResponse create(ClientCreateRequest request) {
@@ -40,7 +40,7 @@ public class ClientService {
 
     public ClientResponse update(Long id, ClientUpdateRequest request) {
         Client entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún cliente con el ID: " + id));
         entity.setFullName(request.getFullName());
         entity.setDocumentType(request.getDocumentType());
         entity.setDocumentNumber(request.getDocumentNumber());
@@ -52,7 +52,7 @@ public class ClientService {
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("Client not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ningún cliente con el ID: " + id);
         repository.deleteById(id);
     }
 

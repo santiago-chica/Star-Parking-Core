@@ -11,6 +11,6 @@ public class SubscriptionLogUpdateRequest {
 
     private OffsetDateTime endsAt;
 
-    @NotNull
+    @NotNull(message = "El campo estado de suscripción es obligatorio")
     private SubscriptionStatus subscriptionStatus;
 }

@@ -10,9 +10,9 @@ public class BillUpdateRequest {
 
     private Long paymentId;
 
-    @NotNull
+    @NotNull(message = "El campo estado de la factura es obligatorio")
     private BillStatus billStatus;
 
-    @Size(max = 100)
+    @Size(max = 100, message = "El campo notas no puede superar los 100 caracteres")
     private String notes;
 }

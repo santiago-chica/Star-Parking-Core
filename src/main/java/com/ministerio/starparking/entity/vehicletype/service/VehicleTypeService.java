@@ -23,7 +23,7 @@ public class VehicleTypeService {
 
     public VehicleTypeResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("VehicleType not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún tipo de vehículo con el ID: " + id)));
     }
 
     public VehicleTypeResponse create(VehicleTypeCreateRequest request) {
@@ -36,7 +36,7 @@ public class VehicleTypeService {
 
     public VehicleTypeResponse update(Long id, VehicleTypeUpdateRequest request) {
         VehicleType entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("VehicleType not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún tipo de vehículo con el ID: " + id));
         if (request.getName() != null) entity.setName(request.getName());
         if (request.getDescription() != null) entity.setDescription(request.getDescription());
         if (request.getCostPerMinute() != null) entity.setCostPerMinute(request.getCostPerMinute());
@@ -44,7 +44,7 @@ public class VehicleTypeService {
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("VehicleType not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ningún tipo de vehículo con el ID: " + id);
         repository.deleteById(id);
     }
 

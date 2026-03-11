@@ -8,16 +8,16 @@ import lombok.Data;
 @Data
 public class ActivityCreateRequest {
 
-    @NotNull
+    @NotNull(message = "El campo ID del usuario es obligatorio")
     private Long userId;
 
-    @NotNull
+    @NotNull(message = "El campo tipo de acción es obligatorio")
     private ActionType actionType;
 
-    @Size(max = 128)
+    @Size(max = 128, message = "El campo detalle no puede superar los 128 caracteres")
     private String detail;
 
-    @NotNull
-    @Size(max = 45)
+    @NotNull(message = "El campo dirección IP es obligatorio")
+    @Size(max = 45, message = "El campo dirección IP no puede superar los 45 caracteres")
     private String ipAddress;
 }

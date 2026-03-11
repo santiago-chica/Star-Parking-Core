@@ -30,17 +30,17 @@ public class BillService {
 
     public BillResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ninguna factura con el ID: " + id)));
     }
 
     public BillResponse create(BillCreateRequest request) {
         Bill entity = new Bill();
         Client client = clientRepository.findById(request.getClientId())
-                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId()));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún cliente con el ID: " + request.getClientId()));
         entity.setClient(client);
         if (request.getPaymentId() != null) {
             entity.setPayment(paymentRepository.findById(request.getPaymentId())
-                    .orElseThrow(() -> new EntityNotFoundException("Payment not found: " + request.getPaymentId())));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún pago con el ID: " + request.getPaymentId())));
         }
         entity.setSubtotal(request.getSubtotal());
         entity.setDiscount(request.getDiscount());
@@ -52,10 +52,10 @@ public class BillService {
 
     public BillResponse update(Long id, BillUpdateRequest request) {
         Bill entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ninguna factura con el ID: " + id));
         if (request.getPaymentId() != null) {
             entity.setPayment(paymentRepository.findById(request.getPaymentId())
-                    .orElseThrow(() -> new EntityNotFoundException("Payment not found: " + request.getPaymentId())));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún pago con el ID: " + request.getPaymentId())));
         } else {
             entity.setPayment(null);
         }
@@ -65,7 +65,7 @@ public class BillService {
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("Bill not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ninguna factura con el ID: " + id);
         repository.deleteById(id);
     }
 

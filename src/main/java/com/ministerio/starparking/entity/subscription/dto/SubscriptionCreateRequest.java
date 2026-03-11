@@ -11,20 +11,20 @@ import java.math.BigDecimal;
 @Data
 public class SubscriptionCreateRequest {
 
-    @NotBlank
-    @Size(max = 32)
+    @NotBlank(message = "El campo nombre no puede estar vacío")
+    @Size(max = 32, message = "El campo nombre no puede superar los 32 caracteres")
     private String name;
 
-    @NotBlank
-    @Size(max = 256)
+    @NotBlank(message = "El campo descripción no puede estar vacío")
+    @Size(max = 256, message = "El campo descripción no puede superar los 256 caracteres")
     private String description;
 
-    @NotNull
-    @DecimalMin("0.0")
+    @NotNull(message = "El campo precio es obligatorio")
+    @DecimalMin(value = "0.0", message = "El campo precio debe ser mayor o igual a 0.0")
     private BigDecimal price;
 
-    @NotNull
-    @DecimalMin("0.0")
+    @NotNull(message = "El campo duración en días es obligatorio")
+    @DecimalMin(value = "0.0", message = "El campo duración en días debe ser mayor o igual a 0.0")
     private BigDecimal dayDuration;
 
     private Boolean isActive = true;

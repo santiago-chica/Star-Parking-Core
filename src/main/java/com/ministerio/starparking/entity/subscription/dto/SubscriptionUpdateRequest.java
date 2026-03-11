@@ -9,16 +9,16 @@ import java.math.BigDecimal;
 @Data
 public class SubscriptionUpdateRequest {
 
-    @Size(max = 32)
+    @Size(max = 32, message = "El campo nombre no puede superar los 32 caracteres")
     private String name;
 
-    @Size(max = 256)
+    @Size(max = 256, message = "El campo descripción no puede superar los 256 caracteres")
     private String description;
 
-    @DecimalMin("0.0")
+    @DecimalMin(value = "0.0", message = "El campo precio debe ser mayor o igual a 0.0")
     private BigDecimal price;
 
-    @DecimalMin("0.0")
+    @DecimalMin(value = "0.0", message = "El campo duración en días debe ser mayor o igual a 0.0")
     private BigDecimal dayDuration;
 
     private Boolean isActive;

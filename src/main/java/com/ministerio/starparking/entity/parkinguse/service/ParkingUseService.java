@@ -32,42 +32,42 @@ public class ParkingUseService {
 
     public ParkingUseResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("ParkingUse not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún uso de parqueo con el ID: " + id)));
     }
 
     public ParkingUseResponse create(ParkingUseCreateRequest request) {
         ParkingUse entity = new ParkingUse();
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + request.getVehicleId()));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún vehículo con el ID: " + request.getVehicleId()));
         ParkingSpot parkingSpot = parkingSpotRepository.findById(request.getParkingSpotId())
-                .orElseThrow(() -> new EntityNotFoundException("ParkingSpot not found: " + request.getParkingSpotId()));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún espacio de parqueo con el ID: " + request.getParkingSpotId()));
         entity.setVehicle(vehicle);
         entity.setParkingSpot(parkingSpot);
         entity.setEntryTime(request.getEntryTime());
         entity.setExitTime(request.getExitTime());
         if (request.getBillId() != null) {
             entity.setBill(billRepository.findById(request.getBillId())
-                    .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + request.getBillId())));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ninguna factura con el ID: " + request.getBillId())));
         }
         return toResponse(repository.save(entity));
     }
 
     public ParkingUseResponse update(Long id, ParkingUseUpdateRequest request) {
         ParkingUse entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("ParkingUse not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún uso de parqueo con el ID: " + id));
         if (request.getVehicleId() != null) {
             entity.setVehicle(vehicleRepository.findById(request.getVehicleId())
-                    .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + request.getVehicleId())));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún vehículo con el ID: " + request.getVehicleId())));
         }
         if (request.getParkingSpotId() != null) {
             entity.setParkingSpot(parkingSpotRepository.findById(request.getParkingSpotId())
-                    .orElseThrow(() -> new EntityNotFoundException("ParkingSpot not found: " + request.getParkingSpotId())));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún espacio de parqueo con el ID: " + request.getParkingSpotId())));
         }
         if (request.getEntryTime() != null) entity.setEntryTime(request.getEntryTime());
         if (request.getExitTime() != null) entity.setExitTime(request.getExitTime());
         if (request.getBillId() != null) {
             entity.setBill(billRepository.findById(request.getBillId())
-                    .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + request.getBillId())));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ninguna factura con el ID: " + request.getBillId())));
         } else {
             entity.setBill(null);
         }
@@ -75,7 +75,7 @@ public class ParkingUseService {
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("ParkingUse not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ningún uso de parqueo con el ID: " + id);
         repository.deleteById(id);
     }
 

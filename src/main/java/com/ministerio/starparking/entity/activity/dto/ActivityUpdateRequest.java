@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class ActivityUpdateRequest {
 
-    @NotNull
+    @NotNull(message = "El campo tipo de acción es obligatorio")
     private ActionType actionType;
 
-    @Size(max = 128)
+    @Size(max = 128, message = "El campo detalle no puede superar los 128 caracteres")
     private String detail;
 }

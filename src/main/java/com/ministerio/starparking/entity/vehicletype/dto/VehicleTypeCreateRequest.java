@@ -9,14 +9,14 @@ import lombok.Data;
 @Data
 public class VehicleTypeCreateRequest {
 
-    @NotBlank
-    @Size(max = 32)
+    @NotBlank(message = "El campo nombre no puede estar vacío")
+    @Size(max = 32, message = "El campo nombre no puede superar los 32 caracteres")
     private String name;
 
-    @Size(max = 128)
+    @Size(max = 128, message = "El campo descripción no puede superar los 128 caracteres")
     private String description;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "El campo costo por minuto es obligatorio")
+    @PositiveOrZero(message = "El campo costo por minuto debe ser mayor o igual a cero")
     private Float costPerMinute;
 }

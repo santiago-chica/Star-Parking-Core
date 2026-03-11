@@ -12,15 +12,15 @@ import java.math.BigDecimal;
 @Data
 public class PaymentCreateRequest {
 
-    @NotNull
-    @DecimalMin(value = "0.00", inclusive = true)
-    @Digits(integer = 10, fraction = 2)
+    @NotNull(message = "El campo monto es obligatorio")
+    @DecimalMin(value = "0.00", inclusive = true, message = "El campo monto debe ser mayor o igual a 0.00")
+    @Digits(integer = 10, fraction = 2, message = "El campo monto debe tener máximo 10 dígitos enteros y 2 decimales")
     private BigDecimal amount;
 
-    @NotNull
+    @NotNull(message = "El campo método de pago es obligatorio")
     private PaymentMethod paymentMethod;
 
-    @Size(max = 64)
+    @Size(max = 64, message = "El campo referencia de pago no puede superar los 64 caracteres")
     private String paymentReference;
 
     private Long billId;

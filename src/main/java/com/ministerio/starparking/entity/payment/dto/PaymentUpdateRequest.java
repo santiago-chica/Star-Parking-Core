@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class PaymentUpdateRequest {
 
-    @NotNull
+    @NotNull(message = "El campo método de pago es obligatorio")
     private PaymentMethod paymentMethod;
 
-    @Size(max = 64)
+    @Size(max = 64, message = "El campo referencia de pago no puede superar los 64 caracteres")
     private String paymentReference;
 }

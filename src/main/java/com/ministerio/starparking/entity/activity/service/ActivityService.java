@@ -26,13 +26,13 @@ public class ActivityService {
 
     public ActivityResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Activity not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ninguna actividad con el ID: " + id)));
     }
 
     public ActivityResponse create(ActivityCreateRequest request) {
         Activity entity = new Activity();
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found: " + request.getUserId()));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún usuario con el ID: " + request.getUserId()));
         entity.setUser(user);
         entity.setActionType(request.getActionType());
         entity.setDetail(request.getDetail());
@@ -42,14 +42,14 @@ public class ActivityService {
 
     public ActivityResponse update(Long id, ActivityUpdateRequest request) {
         Activity entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Activity not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ninguna actividad con el ID: " + id));
         entity.setActionType(request.getActionType());
         entity.setDetail(request.getDetail());
         return toResponse(repository.save(entity));
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("Activity not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ninguna actividad con el ID: " + id);
         repository.deleteById(id);
     }
 

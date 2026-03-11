@@ -26,7 +26,7 @@ public class PaymentService {
 
     public PaymentResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Payment not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún pago con el ID: " + id)));
     }
 
     public PaymentResponse create(PaymentCreateRequest request) {
@@ -37,7 +37,7 @@ public class PaymentService {
         Payment saved = repository.save(entity);
         if (request.getBillId() != null) {
             Bill bill = billRepository.findById(request.getBillId())
-                    .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + request.getBillId()));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ninguna factura con el ID: " + request.getBillId()));
             bill.setPayment(saved);
             billRepository.save(bill);
         }
@@ -46,14 +46,14 @@ public class PaymentService {
 
     public PaymentResponse update(Long id, PaymentUpdateRequest request) {
         Payment entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Payment not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún pago con el ID: " + id));
         entity.setPaymentMethod(request.getPaymentMethod());
         entity.setPaymentReference(request.getPaymentReference());
         return toResponse(repository.save(entity));
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("Payment not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ningún pago con el ID: " + id);
         repository.deleteById(id);
     }
 

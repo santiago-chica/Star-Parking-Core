@@ -26,7 +26,7 @@ public class ParkingSpotService {
 
     public ParkingSpotResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("ParkingSpot not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún espacio de parqueo con el ID: " + id)));
     }
 
     public ParkingSpotResponse create(ParkingSpotCreateRequest request) {
@@ -34,7 +34,7 @@ public class ParkingSpotService {
         entity.setSpotIdentifier(request.getSpotIdentifier());
         if (request.getVehicleId() != null) {
             Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
-                    .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + request.getVehicleId()));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún vehículo con el ID: " + request.getVehicleId()));
             entity.setVehicle(vehicle);
         } else {
             entity.setVehicle(null);
@@ -44,11 +44,11 @@ public class ParkingSpotService {
 
     public ParkingSpotResponse update(Long id, ParkingSpotUpdateRequest request) {
         ParkingSpot entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("ParkingSpot not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún espacio de parqueo con el ID: " + id));
         entity.setSpotIdentifier(request.getSpotIdentifier());
         if (request.getVehicleId() != null) {
             Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
-                    .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + request.getVehicleId()));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún vehículo con el ID: " + request.getVehicleId()));
             entity.setVehicle(vehicle);
         } else {
             entity.setVehicle(null);
@@ -57,7 +57,7 @@ public class ParkingSpotService {
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("ParkingSpot not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ningún espacio de parqueo con el ID: " + id);
         repository.deleteById(id);
     }
 

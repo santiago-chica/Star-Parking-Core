@@ -23,7 +23,7 @@ public class UserService {
 
     public UserResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún usuario con el ID: " + id)));
     }
 
     public UserResponse create(UserCreateRequest request) {
@@ -37,7 +37,7 @@ public class UserService {
 
     public UserResponse update(Long id, UserUpdateRequest request) {
         User entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún usuario con el ID: " + id));
         entity.setFullName(request.getFullName());
         entity.setEmail(request.getEmail());
         entity.setIsActive(request.getIsActive());
@@ -45,7 +45,7 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("User not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ningún usuario con el ID: " + id);
         repository.deleteById(id);
     }
 

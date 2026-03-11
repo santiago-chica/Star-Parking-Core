@@ -23,7 +23,7 @@ public class SubscriptionService {
 
     public SubscriptionResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Subscription not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ninguna suscripción con el ID: " + id)));
     }
 
     public SubscriptionResponse create(SubscriptionCreateRequest request) {
@@ -38,7 +38,7 @@ public class SubscriptionService {
 
     public SubscriptionResponse update(Long id, SubscriptionUpdateRequest request) {
         Subscription entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Subscription not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ninguna suscripción con el ID: " + id));
         if (request.getName() != null) entity.setName(request.getName());
         if (request.getDescription() != null) entity.setDescription(request.getDescription());
         if (request.getPrice() != null) entity.setPrice(request.getPrice());
@@ -48,7 +48,7 @@ public class SubscriptionService {
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("Subscription not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ninguna suscripción con el ID: " + id);
         repository.deleteById(id);
     }
 

@@ -23,7 +23,7 @@ public class VehicleColorService {
 
     public VehicleColorResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("VehicleColor not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún color de vehículo con el ID: " + id)));
     }
 
     public VehicleColorResponse create(VehicleColorCreateRequest request) {
@@ -35,14 +35,14 @@ public class VehicleColorService {
 
     public VehicleColorResponse update(Long id, VehicleColorUpdateRequest request) {
         VehicleColor entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("VehicleColor not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún color de vehículo con el ID: " + id));
         if (request.getColorName() != null) entity.setColorName(request.getColorName());
         if (request.getHexCode() != null) entity.setHexCode(request.getHexCode());
         return toResponse(repository.save(entity));
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("VehicleColor not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ningún color de vehículo con el ID: " + id);
         repository.deleteById(id);
     }
 

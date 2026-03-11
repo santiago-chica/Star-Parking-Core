@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 public class ParkingSpotCreateRequest {
 
-    @NotBlank
-    @Size(max = 32)
+    @NotBlank(message = "El campo identificador de espacio no puede estar vacío")
+    @Size(max = 32, message = "El campo identificador de espacio no puede superar los 32 caracteres")
     private String spotIdentifier;
 
     private Long vehicleId;

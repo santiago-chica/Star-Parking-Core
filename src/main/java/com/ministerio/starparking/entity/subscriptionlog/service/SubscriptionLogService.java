@@ -29,15 +29,15 @@ public class SubscriptionLogService {
 
     public SubscriptionLogResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("SubscriptionLog not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún registro de suscripción con el ID: " + id)));
     }
 
     public SubscriptionLogResponse create(SubscriptionLogCreateRequest request) {
         SubscriptionLog entity = new SubscriptionLog();
         Client client = clientRepository.findById(request.getClientId())
-                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId()));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún cliente con el ID: " + request.getClientId()));
         Subscription subscription = subscriptionRepository.findById(request.getSubscriptionId())
-                .orElseThrow(() -> new EntityNotFoundException("Subscription not found: " + request.getSubscriptionId()));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ninguna suscripción con el ID: " + request.getSubscriptionId()));
         entity.setClient(client);
         entity.setSubscription(subscription);
         entity.setStartsAt(request.getStartsAt());
@@ -48,14 +48,14 @@ public class SubscriptionLogService {
 
     public SubscriptionLogResponse update(Long id, SubscriptionLogUpdateRequest request) {
         SubscriptionLog entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("SubscriptionLog not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún registro de suscripción con el ID: " + id));
         entity.setEndsAt(request.getEndsAt());
         entity.setSubscriptionStatus(request.getSubscriptionStatus());
         return toResponse(repository.save(entity));
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("SubscriptionLog not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ningún registro de suscripción con el ID: " + id);
         repository.deleteById(id);
     }
 

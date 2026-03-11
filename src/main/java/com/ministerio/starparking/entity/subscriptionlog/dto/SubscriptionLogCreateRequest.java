@@ -9,15 +9,15 @@ import java.time.OffsetDateTime;
 @Data
 public class SubscriptionLogCreateRequest {
 
-    @NotNull
+    @NotNull(message = "El campo ID del cliente es obligatorio")
     private Long clientId;
 
-    @NotNull
+    @NotNull(message = "El campo ID de la suscripción es obligatorio")
     private Long subscriptionId;
 
-    @NotNull
+    @NotNull(message = "El campo fecha de inicio es obligatorio")
     private OffsetDateTime startsAt;
 
-    @NotNull
+    @NotNull(message = "El campo estado de suscripción es obligatorio")
     private SubscriptionStatus subscriptionStatus;
 }

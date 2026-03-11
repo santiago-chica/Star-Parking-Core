@@ -32,17 +32,17 @@ public class VehicleService {
 
     public VehicleResponse findById(Long id) {
         return toResponse(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún vehículo con el ID: " + id)));
     }
 
     public VehicleResponse create(VehicleCreateRequest request) {
         Vehicle entity = new Vehicle();
         Client client = clientRepository.findById(request.getClientId())
-                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId()));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún cliente con el ID: " + request.getClientId()));
         VehicleType vehicleType = vehicleTypeRepository.findById(request.getVehicleTypeId())
-                .orElseThrow(() -> new EntityNotFoundException("VehicleType not found: " + request.getVehicleTypeId()));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún tipo de vehículo con el ID: " + request.getVehicleTypeId()));
         VehicleColor vehicleColor = vehicleColorRepository.findById(request.getVehicleColorId())
-                .orElseThrow(() -> new EntityNotFoundException("VehicleColor not found: " + request.getVehicleColorId()));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún color de vehículo con el ID: " + request.getVehicleColorId()));
         entity.setPlate(request.getPlate());
         entity.setClient(client);
         entity.setVehicleType(vehicleType);
@@ -54,19 +54,19 @@ public class VehicleService {
 
     public VehicleResponse update(Long id, VehicleUpdateRequest request) {
         Vehicle entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún vehículo con el ID: " + id));
         if (request.getPlate() != null) entity.setPlate(request.getPlate());
         if (request.getClientId() != null) {
             entity.setClient(clientRepository.findById(request.getClientId())
-                    .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId())));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún cliente con el ID: " + request.getClientId())));
         }
         if (request.getVehicleTypeId() != null) {
             entity.setVehicleType(vehicleTypeRepository.findById(request.getVehicleTypeId())
-                    .orElseThrow(() -> new EntityNotFoundException("VehicleType not found: " + request.getVehicleTypeId())));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún tipo de vehículo con el ID: " + request.getVehicleTypeId())));
         }
         if (request.getVehicleColorId() != null) {
             entity.setVehicleColor(vehicleColorRepository.findById(request.getVehicleColorId())
-                    .orElseThrow(() -> new EntityNotFoundException("VehicleColor not found: " + request.getVehicleColorId())));
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró ningún color de vehículo con el ID: " + request.getVehicleColorId())));
         }
         if (request.getModel() != null) entity.setModel(request.getModel());
         if (request.getBrand() != null) entity.setBrand(request.getBrand());
@@ -74,7 +74,7 @@ public class VehicleService {
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("Vehicle not found: " + id);
+        if (!repository.existsById(id)) throw new EntityNotFoundException("No se encontró ningún vehículo con el ID: " + id);
         repository.deleteById(id);
     }
 
