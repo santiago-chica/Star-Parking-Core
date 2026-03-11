@@ -2,7 +2,8 @@ package com.ministerio.starparking.entity.vehicle.service;
 
 import com.ministerio.starparking.entity.client.model.Client;
 import com.ministerio.starparking.entity.client.repository.ClientRepository;
-import com.ministerio.starparking.entity.vehicle.dto.VehicleRequest;
+import com.ministerio.starparking.entity.vehicle.dto.VehicleCreateRequest;
+import com.ministerio.starparking.entity.vehicle.dto.VehicleUpdateRequest;
 import com.ministerio.starparking.entity.vehicle.dto.VehicleResponse;
 import com.ministerio.starparking.entity.vehicle.model.Vehicle;
 import com.ministerio.starparking.entity.vehicle.repository.VehicleRepository;
@@ -34,16 +35,41 @@ public class VehicleService {
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + id)));
     }
 
-    public VehicleResponse create(VehicleRequest request) {
+    public VehicleResponse create(VehicleCreateRequest request) {
         Vehicle entity = new Vehicle();
-        applyRequest(entity, request);
+        Client client = clientRepository.findById(request.getClientId())
+                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId()));
+        VehicleType vehicleType = vehicleTypeRepository.findById(request.getVehicleTypeId())
+                .orElseThrow(() -> new EntityNotFoundException("VehicleType not found: " + request.getVehicleTypeId()));
+        VehicleColor vehicleColor = vehicleColorRepository.findById(request.getVehicleColorId())
+                .orElseThrow(() -> new EntityNotFoundException("VehicleColor not found: " + request.getVehicleColorId()));
+        entity.setPlate(request.getPlate());
+        entity.setClient(client);
+        entity.setVehicleType(vehicleType);
+        entity.setVehicleColor(vehicleColor);
+        entity.setModel(request.getModel());
+        entity.setBrand(request.getBrand());
         return toResponse(repository.save(entity));
     }
 
-    public VehicleResponse update(Long id, VehicleRequest request) {
+    public VehicleResponse update(Long id, VehicleUpdateRequest request) {
         Vehicle entity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + id));
-        applyRequest(entity, request);
+        if (request.getPlate() != null) entity.setPlate(request.getPlate());
+        if (request.getClientId() != null) {
+            entity.setClient(clientRepository.findById(request.getClientId())
+                    .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId())));
+        }
+        if (request.getVehicleTypeId() != null) {
+            entity.setVehicleType(vehicleTypeRepository.findById(request.getVehicleTypeId())
+                    .orElseThrow(() -> new EntityNotFoundException("VehicleType not found: " + request.getVehicleTypeId())));
+        }
+        if (request.getVehicleColorId() != null) {
+            entity.setVehicleColor(vehicleColorRepository.findById(request.getVehicleColorId())
+                    .orElseThrow(() -> new EntityNotFoundException("VehicleColor not found: " + request.getVehicleColorId())));
+        }
+        if (request.getModel() != null) entity.setModel(request.getModel());
+        if (request.getBrand() != null) entity.setBrand(request.getBrand());
         return toResponse(repository.save(entity));
     }
 
@@ -52,32 +78,34 @@ public class VehicleService {
         repository.deleteById(id);
     }
 
-    private void applyRequest(Vehicle entity, VehicleRequest request) {
-        Client client = clientRepository.findById(request.getClientId())
-                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId()));
-        VehicleType vehicleType = vehicleTypeRepository.findById(request.getVehicleTypeId())
-                .orElseThrow(() -> new EntityNotFoundException("VehicleType not found: " + request.getVehicleTypeId()));
-        VehicleColor vehicleColor = vehicleColorRepository.findById(request.getVehicleColorId())
-                .orElseThrow(() -> new EntityNotFoundException("VehicleColor not found: " + request.getVehicleColorId()));
-
-        entity.setPlate(request.getPlate());
-        entity.setClient(client);
-        entity.setVehicleType(vehicleType);
-        entity.setVehicleColor(vehicleColor);
-        entity.setModel(request.getModel());
-        entity.setBrand(request.getBrand());
-    }
-
     private VehicleResponse toResponse(Vehicle entity) {
+        VehicleResponse.ClientInfo clientInfo = entity.getClient() != null
+                ? VehicleResponse.ClientInfo.builder()
+                        .id(entity.getClient().getId())
+                        .fullName(entity.getClient().getFullName())
+                        .documentNumber(entity.getClient().getDocumentNumber())
+                        .build()
+                : null;
+        VehicleResponse.VehicleTypeInfo typeInfo = entity.getVehicleType() != null
+                ? VehicleResponse.VehicleTypeInfo.builder()
+                        .id(entity.getVehicleType().getId())
+                        .name(entity.getVehicleType().getName())
+                        .costPerMinute(entity.getVehicleType().getCostPerMinute())
+                        .build()
+                : null;
+        VehicleResponse.VehicleColorInfo colorInfo = entity.getVehicleColor() != null
+                ? VehicleResponse.VehicleColorInfo.builder()
+                        .id(entity.getVehicleColor().getId())
+                        .colorName(entity.getVehicleColor().getColorName())
+                        .hexCode(entity.getVehicleColor().getHexCode())
+                        .build()
+                : null;
         return VehicleResponse.builder()
                 .id(entity.getId())
                 .plate(entity.getPlate())
-                .clientId(entity.getClient() != null ? entity.getClient().getId() : null)
-                .clientName(entity.getClient() != null ? entity.getClient().getFullName() : null)
-                .vehicleTypeId(entity.getVehicleType() != null ? entity.getVehicleType().getId() : null)
-                .vehicleTypeName(entity.getVehicleType() != null ? entity.getVehicleType().getName() : null)
-                .vehicleColorId(entity.getVehicleColor() != null ? entity.getVehicleColor().getId() : null)
-                .vehicleColorName(entity.getVehicleColor() != null ? entity.getVehicleColor().getColorName() : null)
+                .client(clientInfo)
+                .vehicleType(typeInfo)
+                .vehicleColor(colorInfo)
                 .model(entity.getModel())
                 .brand(entity.getBrand())
                 .createdAt(entity.getCreatedAt())

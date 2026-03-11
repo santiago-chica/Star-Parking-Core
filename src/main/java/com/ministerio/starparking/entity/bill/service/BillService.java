@@ -1,6 +1,8 @@
 package com.ministerio.starparking.entity.bill.service;
 
-import com.ministerio.starparking.entity.bill.dto.BillRequest;
+import com.ministerio.starparking.common.enums.BillStatus;
+import com.ministerio.starparking.entity.bill.dto.BillCreateRequest;
+import com.ministerio.starparking.entity.bill.dto.BillUpdateRequest;
 import com.ministerio.starparking.entity.bill.dto.BillResponse;
 import com.ministerio.starparking.entity.bill.model.Bill;
 import com.ministerio.starparking.entity.bill.repository.BillRepository;
@@ -31,42 +33,40 @@ public class BillService {
                 .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + id)));
     }
 
-    public BillResponse create(BillRequest request) {
+    public BillResponse create(BillCreateRequest request) {
         Bill entity = new Bill();
-        applyRequest(entity, request);
+        Client client = clientRepository.findById(request.getClientId())
+                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId()));
+        entity.setClient(client);
+        if (request.getPaymentId() != null) {
+            entity.setPayment(paymentRepository.findById(request.getPaymentId())
+                    .orElseThrow(() -> new EntityNotFoundException("Payment not found: " + request.getPaymentId())));
+        }
+        entity.setSubtotal(request.getSubtotal());
+        entity.setDiscount(request.getDiscount());
+        entity.setTax(request.getTax());
+        entity.setBillStatus(request.getBillStatus() != null ? request.getBillStatus() : BillStatus.PENDING);
+        entity.setNotes(request.getNotes());
         return toResponse(repository.save(entity));
     }
 
-    public BillResponse update(Long id, BillRequest request) {
+    public BillResponse update(Long id, BillUpdateRequest request) {
         Bill entity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + id));
-        applyRequest(entity, request);
+        if (request.getPaymentId() != null) {
+            entity.setPayment(paymentRepository.findById(request.getPaymentId())
+                    .orElseThrow(() -> new EntityNotFoundException("Payment not found: " + request.getPaymentId())));
+        } else {
+            entity.setPayment(null);
+        }
+        entity.setBillStatus(request.getBillStatus());
+        entity.setNotes(request.getNotes());
         return toResponse(repository.save(entity));
     }
 
     public void delete(Long id) {
         if (!repository.existsById(id)) throw new EntityNotFoundException("Bill not found: " + id);
         repository.deleteById(id);
-    }
-
-    private void applyRequest(Bill entity, BillRequest request) {
-        Client client = clientRepository.findById(request.getClientId())
-                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId()));
-        entity.setClient(client);
-
-        if (request.getPaymentId() != null) {
-            Payment payment = paymentRepository.findById(request.getPaymentId())
-                    .orElseThrow(() -> new EntityNotFoundException("Payment not found: " + request.getPaymentId()));
-            entity.setPayment(payment);
-        } else {
-            entity.setPayment(null);
-        }
-
-        entity.setSubtotal(request.getSubtotal());
-        entity.setDiscount(request.getDiscount());
-        entity.setTax(request.getTax());
-        entity.setBillStatus(request.getBillStatus());
-        entity.setNotes(request.getNotes());
     }
 
     private BillResponse toResponse(Bill entity) {

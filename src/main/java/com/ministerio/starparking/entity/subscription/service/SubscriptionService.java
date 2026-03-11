@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.subscription.service;
 
-import com.ministerio.starparking.entity.subscription.dto.SubscriptionRequest;
+import com.ministerio.starparking.entity.subscription.dto.SubscriptionCreateRequest;
+import com.ministerio.starparking.entity.subscription.dto.SubscriptionUpdateRequest;
 import com.ministerio.starparking.entity.subscription.dto.SubscriptionResponse;
 import com.ministerio.starparking.entity.subscription.model.Subscription;
 import com.ministerio.starparking.entity.subscription.repository.SubscriptionRepository;
@@ -25,30 +26,30 @@ public class SubscriptionService {
                 .orElseThrow(() -> new EntityNotFoundException("Subscription not found: " + id)));
     }
 
-    public SubscriptionResponse create(SubscriptionRequest request) {
+    public SubscriptionResponse create(SubscriptionCreateRequest request) {
         Subscription entity = new Subscription();
-        applyRequest(entity, request);
+        entity.setName(request.getName());
+        entity.setDescription(request.getDescription());
+        entity.setPrice(request.getPrice());
+        entity.setDayDuration(request.getDayDuration());
+        entity.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
         return toResponse(repository.save(entity));
     }
 
-    public SubscriptionResponse update(Long id, SubscriptionRequest request) {
+    public SubscriptionResponse update(Long id, SubscriptionUpdateRequest request) {
         Subscription entity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Subscription not found: " + id));
-        applyRequest(entity, request);
+        if (request.getName() != null) entity.setName(request.getName());
+        if (request.getDescription() != null) entity.setDescription(request.getDescription());
+        if (request.getPrice() != null) entity.setPrice(request.getPrice());
+        if (request.getDayDuration() != null) entity.setDayDuration(request.getDayDuration());
+        if (request.getIsActive() != null) entity.setIsActive(request.getIsActive());
         return toResponse(repository.save(entity));
     }
 
     public void delete(Long id) {
         if (!repository.existsById(id)) throw new EntityNotFoundException("Subscription not found: " + id);
         repository.deleteById(id);
-    }
-
-    private void applyRequest(Subscription entity, SubscriptionRequest request) {
-        entity.setName(request.getName());
-        entity.setDescription(request.getDescription());
-        entity.setPrice(request.getPrice());
-        entity.setDayDuration(request.getDayDuration());
-        entity.setIsActive(request.getIsActive());
     }
 
     private SubscriptionResponse toResponse(Subscription entity) {

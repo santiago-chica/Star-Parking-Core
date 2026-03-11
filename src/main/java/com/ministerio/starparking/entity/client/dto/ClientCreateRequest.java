@@ -5,7 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class ClientRequest {
+public class ClientCreateRequest {
 
     @NotBlank
     @Size(max = 64)
@@ -27,7 +27,4 @@ public class ClientRequest {
 
     @Size(max = 128)
     private String address;
-
-    @NotNull
-    private Boolean isActive;
 }

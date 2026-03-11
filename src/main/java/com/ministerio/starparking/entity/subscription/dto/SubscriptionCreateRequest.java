@@ -9,7 +9,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class SubscriptionRequest {
+public class SubscriptionCreateRequest {
 
     @NotBlank
     @Size(max = 32)
@@ -27,6 +27,5 @@ public class SubscriptionRequest {
     @DecimalMin("0.0")
     private BigDecimal dayDuration;
 
-    @NotNull
-    private Boolean isActive;
+    private Boolean isActive = true;
 }

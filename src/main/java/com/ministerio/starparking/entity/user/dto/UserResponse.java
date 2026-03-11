@@ -11,6 +11,7 @@ public class UserResponse {
     private Long id;
     private String fullName;
     private String email;
+    private String passwordHash;
     private Boolean isActive;
     private OffsetDateTime lastSeen;
     private OffsetDateTime createdAt;

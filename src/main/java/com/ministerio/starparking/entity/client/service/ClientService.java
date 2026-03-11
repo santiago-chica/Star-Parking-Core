@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.client.service;
 
-import com.ministerio.starparking.entity.client.dto.ClientRequest;
+import com.ministerio.starparking.entity.client.dto.ClientCreateRequest;
+import com.ministerio.starparking.entity.client.dto.ClientUpdateRequest;
 import com.ministerio.starparking.entity.client.dto.ClientResponse;
 import com.ministerio.starparking.entity.client.model.Client;
 import com.ministerio.starparking.entity.client.repository.ClientRepository;
@@ -25,25 +26,21 @@ public class ClientService {
                 .orElseThrow(() -> new EntityNotFoundException("Client not found: " + id)));
     }
 
-    public ClientResponse create(ClientRequest request) {
+    public ClientResponse create(ClientCreateRequest request) {
         Client entity = new Client();
-        applyRequest(entity, request);
+        entity.setFullName(request.getFullName());
+        entity.setDocumentType(request.getDocumentType());
+        entity.setDocumentNumber(request.getDocumentNumber());
+        entity.setPhoneNumber(request.getPhoneNumber());
+        entity.setEmail(request.getEmail());
+        entity.setAddress(request.getAddress());
+        entity.setIsActive(true);
         return toResponse(repository.save(entity));
     }
 
-    public ClientResponse update(Long id, ClientRequest request) {
+    public ClientResponse update(Long id, ClientUpdateRequest request) {
         Client entity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found: " + id));
-        applyRequest(entity, request);
-        return toResponse(repository.save(entity));
-    }
-
-    public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("Client not found: " + id);
-        repository.deleteById(id);
-    }
-
-    private void applyRequest(Client entity, ClientRequest request) {
         entity.setFullName(request.getFullName());
         entity.setDocumentType(request.getDocumentType());
         entity.setDocumentNumber(request.getDocumentNumber());
@@ -51,6 +48,12 @@ public class ClientService {
         entity.setEmail(request.getEmail());
         entity.setAddress(request.getAddress());
         entity.setIsActive(request.getIsActive());
+        return toResponse(repository.save(entity));
+    }
+
+    public void delete(Long id) {
+        if (!repository.existsById(id)) throw new EntityNotFoundException("Client not found: " + id);
+        repository.deleteById(id);
     }
 
     private ClientResponse toResponse(Client entity) {

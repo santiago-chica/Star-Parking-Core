@@ -4,7 +4,8 @@ import com.ministerio.starparking.entity.client.model.Client;
 import com.ministerio.starparking.entity.client.repository.ClientRepository;
 import com.ministerio.starparking.entity.subscription.model.Subscription;
 import com.ministerio.starparking.entity.subscription.repository.SubscriptionRepository;
-import com.ministerio.starparking.entity.subscriptionlog.dto.SubscriptionLogRequest;
+import com.ministerio.starparking.entity.subscriptionlog.dto.SubscriptionLogCreateRequest;
+import com.ministerio.starparking.entity.subscriptionlog.dto.SubscriptionLogUpdateRequest;
 import com.ministerio.starparking.entity.subscriptionlog.dto.SubscriptionLogResponse;
 import com.ministerio.starparking.entity.subscriptionlog.model.SubscriptionLog;
 import com.ministerio.starparking.entity.subscriptionlog.repository.SubscriptionLogRepository;
@@ -31,16 +32,25 @@ public class SubscriptionLogService {
                 .orElseThrow(() -> new EntityNotFoundException("SubscriptionLog not found: " + id)));
     }
 
-    public SubscriptionLogResponse create(SubscriptionLogRequest request) {
+    public SubscriptionLogResponse create(SubscriptionLogCreateRequest request) {
         SubscriptionLog entity = new SubscriptionLog();
-        applyRequest(entity, request);
+        Client client = clientRepository.findById(request.getClientId())
+                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId()));
+        Subscription subscription = subscriptionRepository.findById(request.getSubscriptionId())
+                .orElseThrow(() -> new EntityNotFoundException("Subscription not found: " + request.getSubscriptionId()));
+        entity.setClient(client);
+        entity.setSubscription(subscription);
+        entity.setStartsAt(request.getStartsAt());
+        entity.setEndsAt(request.getEndsAt());
+        entity.setSubscriptionStatus(request.getSubscriptionStatus());
         return toResponse(repository.save(entity));
     }
 
-    public SubscriptionLogResponse update(Long id, SubscriptionLogRequest request) {
+    public SubscriptionLogResponse update(Long id, SubscriptionLogUpdateRequest request) {
         SubscriptionLog entity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("SubscriptionLog not found: " + id));
-        applyRequest(entity, request);
+        entity.setEndsAt(request.getEndsAt());
+        entity.setSubscriptionStatus(request.getSubscriptionStatus());
         return toResponse(repository.save(entity));
     }
 
@@ -49,26 +59,20 @@ public class SubscriptionLogService {
         repository.deleteById(id);
     }
 
-    private void applyRequest(SubscriptionLog entity, SubscriptionLogRequest request) {
-        Client client = clientRepository.findById(request.getClientId())
-                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + request.getClientId()));
-        Subscription subscription = subscriptionRepository.findById(request.getSubscriptionId())
-                .orElseThrow(() -> new EntityNotFoundException("Subscription not found: " + request.getSubscriptionId()));
-
-        entity.setClient(client);
-        entity.setSubscription(subscription);
-        entity.setStartsAt(request.getStartsAt());
-        entity.setEndsAt(request.getEndsAt());
-        entity.setSubscriptionStatus(request.getSubscriptionStatus());
-    }
-
     private SubscriptionLogResponse toResponse(SubscriptionLog entity) {
+        SubscriptionLogResponse.SubscriptionInfo subInfo = entity.getSubscription() != null
+                ? SubscriptionLogResponse.SubscriptionInfo.builder()
+                        .id(entity.getSubscription().getId())
+                        .name(entity.getSubscription().getName())
+                        .price(entity.getSubscription().getPrice())
+                        .dayDuration(entity.getSubscription().getDayDuration())
+                        .build()
+                : null;
         return SubscriptionLogResponse.builder()
                 .id(entity.getId())
                 .clientId(entity.getClient() != null ? entity.getClient().getId() : null)
                 .clientName(entity.getClient() != null ? entity.getClient().getFullName() : null)
-                .subscriptionId(entity.getSubscription() != null ? entity.getSubscription().getId() : null)
-                .subscriptionName(entity.getSubscription() != null ? entity.getSubscription().getName() : null)
+                .subscription(subInfo)
                 .startsAt(entity.getStartsAt())
                 .endsAt(entity.getEndsAt())
                 .subscriptionStatus(entity.getSubscriptionStatus())

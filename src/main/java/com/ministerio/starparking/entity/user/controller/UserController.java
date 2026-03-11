@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.user.controller;
 
-import com.ministerio.starparking.entity.user.dto.UserRequest;
+import com.ministerio.starparking.entity.user.dto.UserCreateRequest;
+import com.ministerio.starparking.entity.user.dto.UserUpdateRequest;
 import com.ministerio.starparking.entity.user.dto.UserResponse;
 import com.ministerio.starparking.entity.user.service.UserService;
 import jakarta.validation.Valid;
@@ -29,12 +30,12 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse create(@Valid @RequestBody UserRequest request) {
+    public UserResponse create(@Valid @RequestBody UserCreateRequest request) {
         return service.create(request);
     }
 
     @PutMapping("/{id}")
-    public UserResponse update(@PathVariable Long id, @Valid @RequestBody UserRequest request) {
+    public UserResponse update(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
         return service.update(id, request);
     }
 

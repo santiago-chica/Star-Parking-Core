@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class ParkingSpotRequest {
+public class ParkingSpotUpdateRequest {
 
     @NotBlank
     @Size(max = 32)

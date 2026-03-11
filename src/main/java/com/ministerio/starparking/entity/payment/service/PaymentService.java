@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.payment.service;
 
-import com.ministerio.starparking.entity.payment.dto.PaymentRequest;
+import com.ministerio.starparking.entity.payment.dto.PaymentCreateRequest;
+import com.ministerio.starparking.entity.payment.dto.PaymentUpdateRequest;
 import com.ministerio.starparking.entity.payment.dto.PaymentResponse;
 import com.ministerio.starparking.entity.payment.model.Payment;
 import com.ministerio.starparking.entity.payment.repository.PaymentRepository;
@@ -25,28 +26,25 @@ public class PaymentService {
                 .orElseThrow(() -> new EntityNotFoundException("Payment not found: " + id)));
     }
 
-    public PaymentResponse create(PaymentRequest request) {
+    public PaymentResponse create(PaymentCreateRequest request) {
         Payment entity = new Payment();
-        applyRequest(entity, request);
+        entity.setAmount(request.getAmount());
+        entity.setPaymentMethod(request.getPaymentMethod());
+        entity.setPaymentReference(request.getPaymentReference());
         return toResponse(repository.save(entity));
     }
 
-    public PaymentResponse update(Long id, PaymentRequest request) {
+    public PaymentResponse update(Long id, PaymentUpdateRequest request) {
         Payment entity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Payment not found: " + id));
-        applyRequest(entity, request);
+        entity.setPaymentMethod(request.getPaymentMethod());
+        entity.setPaymentReference(request.getPaymentReference());
         return toResponse(repository.save(entity));
     }
 
     public void delete(Long id) {
         if (!repository.existsById(id)) throw new EntityNotFoundException("Payment not found: " + id);
         repository.deleteById(id);
-    }
-
-    private void applyRequest(Payment entity, PaymentRequest request) {
-        entity.setAmount(request.getAmount());
-        entity.setPaymentMethod(request.getPaymentMethod());
-        entity.setPaymentReference(request.getPaymentReference());
     }
 
     private PaymentResponse toResponse(Payment entity) {

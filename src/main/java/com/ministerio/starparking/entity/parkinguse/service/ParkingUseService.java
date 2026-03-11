@@ -4,7 +4,8 @@ import com.ministerio.starparking.entity.bill.model.Bill;
 import com.ministerio.starparking.entity.bill.repository.BillRepository;
 import com.ministerio.starparking.entity.parkingspot.model.ParkingSpot;
 import com.ministerio.starparking.entity.parkingspot.repository.ParkingSpotRepository;
-import com.ministerio.starparking.entity.parkinguse.dto.ParkingUseRequest;
+import com.ministerio.starparking.entity.parkinguse.dto.ParkingUseCreateRequest;
+import com.ministerio.starparking.entity.parkinguse.dto.ParkingUseUpdateRequest;
 import com.ministerio.starparking.entity.parkinguse.dto.ParkingUseResponse;
 import com.ministerio.starparking.entity.parkinguse.model.ParkingUse;
 import com.ministerio.starparking.entity.parkinguse.repository.ParkingUseRepository;
@@ -34,16 +35,33 @@ public class ParkingUseService {
                 .orElseThrow(() -> new EntityNotFoundException("ParkingUse not found: " + id)));
     }
 
-    public ParkingUseResponse create(ParkingUseRequest request) {
+    public ParkingUseResponse create(ParkingUseCreateRequest request) {
         ParkingUse entity = new ParkingUse();
-        applyRequest(entity, request);
+        Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + request.getVehicleId()));
+        ParkingSpot parkingSpot = parkingSpotRepository.findById(request.getParkingSpotId())
+                .orElseThrow(() -> new EntityNotFoundException("ParkingSpot not found: " + request.getParkingSpotId()));
+        entity.setVehicle(vehicle);
+        entity.setParkingSpot(parkingSpot);
+        entity.setEntryTime(request.getEntryTime());
+        entity.setExitTime(request.getExitTime());
+        if (request.getBillId() != null) {
+            entity.setBill(billRepository.findById(request.getBillId())
+                    .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + request.getBillId())));
+        }
         return toResponse(repository.save(entity));
     }
 
-    public ParkingUseResponse update(Long id, ParkingUseRequest request) {
+    public ParkingUseResponse update(Long id, ParkingUseUpdateRequest request) {
         ParkingUse entity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("ParkingUse not found: " + id));
-        applyRequest(entity, request);
+        if (request.getExitTime() != null) entity.setExitTime(request.getExitTime());
+        if (request.getBillId() != null) {
+            entity.setBill(billRepository.findById(request.getBillId())
+                    .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + request.getBillId())));
+        } else {
+            entity.setBill(null);
+        }
         return toResponse(repository.save(entity));
     }
 
@@ -52,37 +70,36 @@ public class ParkingUseService {
         repository.deleteById(id);
     }
 
-    private void applyRequest(ParkingUse entity, ParkingUseRequest request) {
-        Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + request.getVehicleId()));
-        ParkingSpot parkingSpot = parkingSpotRepository.findById(request.getParkingSpotId())
-                .orElseThrow(() -> new EntityNotFoundException("ParkingSpot not found: " + request.getParkingSpotId()));
-
-        entity.setVehicle(vehicle);
-        entity.setParkingSpot(parkingSpot);
-        entity.setEntryTime(request.getEntryTime());
-        entity.setExitTime(request.getExitTime());
-
-        if (request.getBillId() != null) {
-            Bill bill = billRepository.findById(request.getBillId())
-                    .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + request.getBillId()));
-            entity.setBill(bill);
-        } else {
-            entity.setBill(null);
-        }
-    }
-
     private ParkingUseResponse toResponse(ParkingUse entity) {
+        ParkingUseResponse.VehicleInfo vehicleInfo = entity.getVehicle() != null
+                ? ParkingUseResponse.VehicleInfo.builder()
+                        .id(entity.getVehicle().getId())
+                        .plate(entity.getVehicle().getPlate())
+                        .model(entity.getVehicle().getModel())
+                        .brand(entity.getVehicle().getBrand())
+                        .build()
+                : null;
+        ParkingUseResponse.ParkingSpotInfo spotInfo = entity.getParkingSpot() != null
+                ? ParkingUseResponse.ParkingSpotInfo.builder()
+                        .id(entity.getParkingSpot().getId())
+                        .spotIdentifier(entity.getParkingSpot().getSpotIdentifier())
+                        .build()
+                : null;
+        ParkingUseResponse.BillInfo billInfo = entity.getBill() != null
+                ? ParkingUseResponse.BillInfo.builder()
+                        .id(entity.getBill().getId())
+                        .billStatus(entity.getBill().getBillStatus())
+                        .total(entity.getBill().getTotal())
+                        .build()
+                : null;
         return ParkingUseResponse.builder()
                 .id(entity.getId())
-                .vehicleId(entity.getVehicle() != null ? entity.getVehicle().getId() : null)
-                .vehiclePlate(entity.getVehicle() != null ? entity.getVehicle().getPlate() : null)
-                .parkingSpotId(entity.getParkingSpot() != null ? entity.getParkingSpot().getId() : null)
-                .spotIdentifier(entity.getParkingSpot() != null ? entity.getParkingSpot().getSpotIdentifier() : null)
+                .vehicle(vehicleInfo)
+                .parkingSpot(spotInfo)
                 .entryTime(entity.getEntryTime())
                 .exitTime(entity.getExitTime())
                 .stayMinutes(entity.getStayMinutes())
-                .billId(entity.getBill() != null ? entity.getBill().getId() : null)
+                .bill(billInfo)
                 .build();
     }
 }

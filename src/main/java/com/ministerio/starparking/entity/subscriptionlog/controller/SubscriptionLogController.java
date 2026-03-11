@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.subscriptionlog.controller;
 
-import com.ministerio.starparking.entity.subscriptionlog.dto.SubscriptionLogRequest;
+import com.ministerio.starparking.entity.subscriptionlog.dto.SubscriptionLogCreateRequest;
+import com.ministerio.starparking.entity.subscriptionlog.dto.SubscriptionLogUpdateRequest;
 import com.ministerio.starparking.entity.subscriptionlog.dto.SubscriptionLogResponse;
 import com.ministerio.starparking.entity.subscriptionlog.service.SubscriptionLogService;
 import jakarta.validation.Valid;
@@ -29,12 +30,12 @@ public class SubscriptionLogController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SubscriptionLogResponse create(@Valid @RequestBody SubscriptionLogRequest request) {
+    public SubscriptionLogResponse create(@Valid @RequestBody SubscriptionLogCreateRequest request) {
         return service.create(request);
     }
 
     @PutMapping("/{id}")
-    public SubscriptionLogResponse update(@PathVariable Long id, @Valid @RequestBody SubscriptionLogRequest request) {
+    public SubscriptionLogResponse update(@PathVariable Long id, @Valid @RequestBody SubscriptionLogUpdateRequest request) {
         return service.update(id, request);
     }
 

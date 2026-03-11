@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.bill.controller;
 
-import com.ministerio.starparking.entity.bill.dto.BillRequest;
+import com.ministerio.starparking.entity.bill.dto.BillCreateRequest;
+import com.ministerio.starparking.entity.bill.dto.BillUpdateRequest;
 import com.ministerio.starparking.entity.bill.dto.BillResponse;
 import com.ministerio.starparking.entity.bill.service.BillService;
 import jakarta.validation.Valid;
@@ -29,12 +30,12 @@ public class BillController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BillResponse create(@Valid @RequestBody BillRequest request) {
+    public BillResponse create(@Valid @RequestBody BillCreateRequest request) {
         return service.create(request);
     }
 
     @PutMapping("/{id}")
-    public BillResponse update(@PathVariable Long id, @Valid @RequestBody BillRequest request) {
+    public BillResponse update(@PathVariable Long id, @Valid @RequestBody BillUpdateRequest request) {
         return service.update(id, request);
     }
 

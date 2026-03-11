@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.vehiclecolor.controller;
 
-import com.ministerio.starparking.entity.vehiclecolor.dto.VehicleColorRequest;
+import com.ministerio.starparking.entity.vehiclecolor.dto.VehicleColorCreateRequest;
+import com.ministerio.starparking.entity.vehiclecolor.dto.VehicleColorUpdateRequest;
 import com.ministerio.starparking.entity.vehiclecolor.dto.VehicleColorResponse;
 import com.ministerio.starparking.entity.vehiclecolor.service.VehicleColorService;
 import jakarta.validation.Valid;
@@ -29,12 +30,12 @@ public class VehicleColorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public VehicleColorResponse create(@Valid @RequestBody VehicleColorRequest request) {
+    public VehicleColorResponse create(@Valid @RequestBody VehicleColorCreateRequest request) {
         return service.create(request);
     }
 
     @PutMapping("/{id}")
-    public VehicleColorResponse update(@PathVariable Long id, @Valid @RequestBody VehicleColorRequest request) {
+    public VehicleColorResponse update(@PathVariable Long id, @Valid @RequestBody VehicleColorUpdateRequest request) {
         return service.update(id, request);
     }
 

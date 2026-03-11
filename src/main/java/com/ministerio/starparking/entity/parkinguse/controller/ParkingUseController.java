@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.parkinguse.controller;
 
-import com.ministerio.starparking.entity.parkinguse.dto.ParkingUseRequest;
+import com.ministerio.starparking.entity.parkinguse.dto.ParkingUseCreateRequest;
+import com.ministerio.starparking.entity.parkinguse.dto.ParkingUseUpdateRequest;
 import com.ministerio.starparking.entity.parkinguse.dto.ParkingUseResponse;
 import com.ministerio.starparking.entity.parkinguse.service.ParkingUseService;
 import jakarta.validation.Valid;
@@ -29,12 +30,12 @@ public class ParkingUseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ParkingUseResponse create(@Valid @RequestBody ParkingUseRequest request) {
+    public ParkingUseResponse create(@Valid @RequestBody ParkingUseCreateRequest request) {
         return service.create(request);
     }
 
     @PutMapping("/{id}")
-    public ParkingUseResponse update(@PathVariable Long id, @Valid @RequestBody ParkingUseRequest request) {
+    public ParkingUseResponse update(@PathVariable Long id, @Valid @RequestBody ParkingUseUpdateRequest request) {
         return service.update(id, request);
     }
 

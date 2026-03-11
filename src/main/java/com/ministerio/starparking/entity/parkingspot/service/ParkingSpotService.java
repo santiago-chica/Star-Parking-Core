@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.parkingspot.service;
 
-import com.ministerio.starparking.entity.parkingspot.dto.ParkingSpotRequest;
+import com.ministerio.starparking.entity.parkingspot.dto.ParkingSpotCreateRequest;
+import com.ministerio.starparking.entity.parkingspot.dto.ParkingSpotUpdateRequest;
 import com.ministerio.starparking.entity.parkingspot.dto.ParkingSpotResponse;
 import com.ministerio.starparking.entity.parkingspot.model.ParkingSpot;
 import com.ministerio.starparking.entity.parkingspot.repository.ParkingSpotRepository;
@@ -28,25 +29,8 @@ public class ParkingSpotService {
                 .orElseThrow(() -> new EntityNotFoundException("ParkingSpot not found: " + id)));
     }
 
-    public ParkingSpotResponse create(ParkingSpotRequest request) {
+    public ParkingSpotResponse create(ParkingSpotCreateRequest request) {
         ParkingSpot entity = new ParkingSpot();
-        applyRequest(entity, request);
-        return toResponse(repository.save(entity));
-    }
-
-    public ParkingSpotResponse update(Long id, ParkingSpotRequest request) {
-        ParkingSpot entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("ParkingSpot not found: " + id));
-        applyRequest(entity, request);
-        return toResponse(repository.save(entity));
-    }
-
-    public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("ParkingSpot not found: " + id);
-        repository.deleteById(id);
-    }
-
-    private void applyRequest(ParkingSpot entity, ParkingSpotRequest request) {
         entity.setSpotIdentifier(request.getSpotIdentifier());
         if (request.getVehicleId() != null) {
             Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
@@ -55,6 +39,26 @@ public class ParkingSpotService {
         } else {
             entity.setVehicle(null);
         }
+        return toResponse(repository.save(entity));
+    }
+
+    public ParkingSpotResponse update(Long id, ParkingSpotUpdateRequest request) {
+        ParkingSpot entity = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("ParkingSpot not found: " + id));
+        entity.setSpotIdentifier(request.getSpotIdentifier());
+        if (request.getVehicleId() != null) {
+            Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
+                    .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + request.getVehicleId()));
+            entity.setVehicle(vehicle);
+        } else {
+            entity.setVehicle(null);
+        }
+        return toResponse(repository.save(entity));
+    }
+
+    public void delete(Long id) {
+        if (!repository.existsById(id)) throw new EntityNotFoundException("ParkingSpot not found: " + id);
+        repository.deleteById(id);
     }
 
     private ParkingSpotResponse toResponse(ParkingSpot entity) {

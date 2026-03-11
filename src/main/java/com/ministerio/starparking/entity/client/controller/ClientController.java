@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.client.controller;
 
-import com.ministerio.starparking.entity.client.dto.ClientRequest;
+import com.ministerio.starparking.entity.client.dto.ClientCreateRequest;
+import com.ministerio.starparking.entity.client.dto.ClientUpdateRequest;
 import com.ministerio.starparking.entity.client.dto.ClientResponse;
 import com.ministerio.starparking.entity.client.service.ClientService;
 import jakarta.validation.Valid;
@@ -29,12 +30,12 @@ public class ClientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ClientResponse create(@Valid @RequestBody ClientRequest request) {
+    public ClientResponse create(@Valid @RequestBody ClientCreateRequest request) {
         return service.create(request);
     }
 
     @PutMapping("/{id}")
-    public ClientResponse update(@PathVariable Long id, @Valid @RequestBody ClientRequest request) {
+    public ClientResponse update(@PathVariable Long id, @Valid @RequestBody ClientUpdateRequest request) {
         return service.update(id, request);
     }
 

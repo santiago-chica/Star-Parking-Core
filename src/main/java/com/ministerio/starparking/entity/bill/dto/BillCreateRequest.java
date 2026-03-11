@@ -7,7 +7,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class BillRequest {
+public class BillCreateRequest {
 
     @NotNull
     private Long clientId;
@@ -28,8 +28,7 @@ public class BillRequest {
     @DecimalMax("1.0")
     private BigDecimal tax;
 
-    @NotNull
-    private BillStatus billStatus;
+    private BillStatus billStatus = BillStatus.PENDING;
 
     @Size(max = 100)
     private String notes;

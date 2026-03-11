@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.payment.controller;
 
-import com.ministerio.starparking.entity.payment.dto.PaymentRequest;
+import com.ministerio.starparking.entity.payment.dto.PaymentCreateRequest;
+import com.ministerio.starparking.entity.payment.dto.PaymentUpdateRequest;
 import com.ministerio.starparking.entity.payment.dto.PaymentResponse;
 import com.ministerio.starparking.entity.payment.service.PaymentService;
 import jakarta.validation.Valid;
@@ -29,12 +30,12 @@ public class PaymentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PaymentResponse create(@Valid @RequestBody PaymentRequest request) {
+    public PaymentResponse create(@Valid @RequestBody PaymentCreateRequest request) {
         return service.create(request);
     }
 
     @PutMapping("/{id}")
-    public PaymentResponse update(@PathVariable Long id, @Valid @RequestBody PaymentRequest request) {
+    public PaymentResponse update(@PathVariable Long id, @Valid @RequestBody PaymentUpdateRequest request) {
         return service.update(id, request);
     }
 

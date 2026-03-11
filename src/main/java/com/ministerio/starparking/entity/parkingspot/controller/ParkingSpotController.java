@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.parkingspot.controller;
 
-import com.ministerio.starparking.entity.parkingspot.dto.ParkingSpotRequest;
+import com.ministerio.starparking.entity.parkingspot.dto.ParkingSpotCreateRequest;
+import com.ministerio.starparking.entity.parkingspot.dto.ParkingSpotUpdateRequest;
 import com.ministerio.starparking.entity.parkingspot.dto.ParkingSpotResponse;
 import com.ministerio.starparking.entity.parkingspot.service.ParkingSpotService;
 import jakarta.validation.Valid;
@@ -29,12 +30,12 @@ public class ParkingSpotController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ParkingSpotResponse create(@Valid @RequestBody ParkingSpotRequest request) {
+    public ParkingSpotResponse create(@Valid @RequestBody ParkingSpotCreateRequest request) {
         return service.create(request);
     }
 
     @PutMapping("/{id}")
-    public ParkingSpotResponse update(@PathVariable Long id, @Valid @RequestBody ParkingSpotRequest request) {
+    public ParkingSpotResponse update(@PathVariable Long id, @Valid @RequestBody ParkingSpotUpdateRequest request) {
         return service.update(id, request);
     }
 

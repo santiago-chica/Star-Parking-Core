@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.vehiclecolor.service;
 
-import com.ministerio.starparking.entity.vehiclecolor.dto.VehicleColorRequest;
+import com.ministerio.starparking.entity.vehiclecolor.dto.VehicleColorCreateRequest;
+import com.ministerio.starparking.entity.vehiclecolor.dto.VehicleColorUpdateRequest;
 import com.ministerio.starparking.entity.vehiclecolor.dto.VehicleColorResponse;
 import com.ministerio.starparking.entity.vehiclecolor.model.VehicleColor;
 import com.ministerio.starparking.entity.vehiclecolor.repository.VehicleColorRepository;
@@ -25,27 +26,24 @@ public class VehicleColorService {
                 .orElseThrow(() -> new EntityNotFoundException("VehicleColor not found: " + id)));
     }
 
-    public VehicleColorResponse create(VehicleColorRequest request) {
+    public VehicleColorResponse create(VehicleColorCreateRequest request) {
         VehicleColor entity = new VehicleColor();
-        applyRequest(entity, request);
+        entity.setColorName(request.getColorName());
+        entity.setHexCode(request.getHexCode());
         return toResponse(repository.save(entity));
     }
 
-    public VehicleColorResponse update(Long id, VehicleColorRequest request) {
+    public VehicleColorResponse update(Long id, VehicleColorUpdateRequest request) {
         VehicleColor entity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("VehicleColor not found: " + id));
-        applyRequest(entity, request);
+        if (request.getColorName() != null) entity.setColorName(request.getColorName());
+        if (request.getHexCode() != null) entity.setHexCode(request.getHexCode());
         return toResponse(repository.save(entity));
     }
 
     public void delete(Long id) {
         if (!repository.existsById(id)) throw new EntityNotFoundException("VehicleColor not found: " + id);
         repository.deleteById(id);
-    }
-
-    private void applyRequest(VehicleColor entity, VehicleColorRequest request) {
-        entity.setColorName(request.getColorName());
-        entity.setHexCode(request.getHexCode());
     }
 
     private VehicleColorResponse toResponse(VehicleColor entity) {

@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.vehicletype.controller;
 
-import com.ministerio.starparking.entity.vehicletype.dto.VehicleTypeRequest;
+import com.ministerio.starparking.entity.vehicletype.dto.VehicleTypeCreateRequest;
+import com.ministerio.starparking.entity.vehicletype.dto.VehicleTypeUpdateRequest;
 import com.ministerio.starparking.entity.vehicletype.dto.VehicleTypeResponse;
 import com.ministerio.starparking.entity.vehicletype.service.VehicleTypeService;
 import jakarta.validation.Valid;
@@ -29,12 +30,12 @@ public class VehicleTypeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public VehicleTypeResponse create(@Valid @RequestBody VehicleTypeRequest request) {
+    public VehicleTypeResponse create(@Valid @RequestBody VehicleTypeCreateRequest request) {
         return service.create(request);
     }
 
     @PutMapping("/{id}")
-    public VehicleTypeResponse update(@PathVariable Long id, @Valid @RequestBody VehicleTypeRequest request) {
+    public VehicleTypeResponse update(@PathVariable Long id, @Valid @RequestBody VehicleTypeUpdateRequest request) {
         return service.update(id, request);
     }
 

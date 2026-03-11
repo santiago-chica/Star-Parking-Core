@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.OffsetDateTime;
 
 @Data
-public class ParkingUseRequest {
+public class ParkingUseCreateRequest {
 
     @NotNull
     private Long vehicleId;
@@ -17,7 +17,6 @@ public class ParkingUseRequest {
     @NotNull
     private OffsetDateTime entryTime;
 
-    @NotNull
     private OffsetDateTime exitTime;
 
     private Long billId;

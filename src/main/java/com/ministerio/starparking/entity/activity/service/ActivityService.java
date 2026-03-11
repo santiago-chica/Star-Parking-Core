@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.activity.service;
 
-import com.ministerio.starparking.entity.activity.dto.ActivityRequest;
+import com.ministerio.starparking.entity.activity.dto.ActivityCreateRequest;
+import com.ministerio.starparking.entity.activity.dto.ActivityUpdateRequest;
 import com.ministerio.starparking.entity.activity.dto.ActivityResponse;
 import com.ministerio.starparking.entity.activity.model.Activity;
 import com.ministerio.starparking.entity.activity.repository.ActivityRepository;
@@ -28,31 +29,28 @@ public class ActivityService {
                 .orElseThrow(() -> new EntityNotFoundException("Activity not found: " + id)));
     }
 
-    public ActivityResponse create(ActivityRequest request) {
+    public ActivityResponse create(ActivityCreateRequest request) {
         Activity entity = new Activity();
-        applyRequest(entity, request);
-        return toResponse(repository.save(entity));
-    }
-
-    public ActivityResponse update(Long id, ActivityRequest request) {
-        Activity entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Activity not found: " + id));
-        applyRequest(entity, request);
-        return toResponse(repository.save(entity));
-    }
-
-    public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("Activity not found: " + id);
-        repository.deleteById(id);
-    }
-
-    private void applyRequest(Activity entity, ActivityRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + request.getUserId()));
         entity.setUser(user);
         entity.setActionType(request.getActionType());
         entity.setDetail(request.getDetail());
         entity.setIpAddress(request.getIpAddress());
+        return toResponse(repository.save(entity));
+    }
+
+    public ActivityResponse update(Long id, ActivityUpdateRequest request) {
+        Activity entity = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Activity not found: " + id));
+        entity.setActionType(request.getActionType());
+        entity.setDetail(request.getDetail());
+        return toResponse(repository.save(entity));
+    }
+
+    public void delete(Long id) {
+        if (!repository.existsById(id)) throw new EntityNotFoundException("Activity not found: " + id);
+        repository.deleteById(id);
     }
 
     private ActivityResponse toResponse(Activity entity) {

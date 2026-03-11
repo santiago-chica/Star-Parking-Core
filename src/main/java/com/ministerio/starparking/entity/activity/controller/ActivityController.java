@@ -1,6 +1,7 @@
 package com.ministerio.starparking.entity.activity.controller;
 
-import com.ministerio.starparking.entity.activity.dto.ActivityRequest;
+import com.ministerio.starparking.entity.activity.dto.ActivityCreateRequest;
+import com.ministerio.starparking.entity.activity.dto.ActivityUpdateRequest;
 import com.ministerio.starparking.entity.activity.dto.ActivityResponse;
 import com.ministerio.starparking.entity.activity.service.ActivityService;
 import jakarta.validation.Valid;
@@ -29,12 +30,12 @@ public class ActivityController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ActivityResponse create(@Valid @RequestBody ActivityRequest request) {
+    public ActivityResponse create(@Valid @RequestBody ActivityCreateRequest request) {
         return service.create(request);
     }
 
     @PutMapping("/{id}")
-    public ActivityResponse update(@PathVariable Long id, @Valid @RequestBody ActivityRequest request) {
+    public ActivityResponse update(@PathVariable Long id, @Valid @RequestBody ActivityUpdateRequest request) {
         return service.update(id, request);
     }
 

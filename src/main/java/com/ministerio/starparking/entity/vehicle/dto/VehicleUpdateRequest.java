@@ -1,24 +1,20 @@
 package com.ministerio.starparking.entity.vehicle.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class VehicleRequest {
+public class VehicleUpdateRequest {
 
     @NotBlank
     @Size(max = 16)
     private String plate;
 
-    @NotNull
     private Long clientId;
 
-    @NotNull
     private Long vehicleTypeId;
 
-    @NotNull
     private Long vehicleColorId;
 
     @Size(max = 32)
