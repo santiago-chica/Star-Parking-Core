@@ -1,5 +1,7 @@
 package com.ministerio.starparking.entity.payment.service;
 
+import com.ministerio.starparking.entity.bill.model.Bill;
+import com.ministerio.starparking.entity.bill.repository.BillRepository;
 import com.ministerio.starparking.entity.payment.dto.PaymentCreateRequest;
 import com.ministerio.starparking.entity.payment.dto.PaymentUpdateRequest;
 import com.ministerio.starparking.entity.payment.dto.PaymentResponse;
@@ -16,6 +18,7 @@ import java.util.List;
 public class PaymentService {
 
     private final PaymentRepository repository;
+    private final BillRepository billRepository;
 
     public List<PaymentResponse> findAll() {
         return repository.findAll().stream().map(this::toResponse).toList();
@@ -31,7 +34,14 @@ public class PaymentService {
         entity.setAmount(request.getAmount());
         entity.setPaymentMethod(request.getPaymentMethod());
         entity.setPaymentReference(request.getPaymentReference());
-        return toResponse(repository.save(entity));
+        Payment saved = repository.save(entity);
+        if (request.getBillId() != null) {
+            Bill bill = billRepository.findById(request.getBillId())
+                    .orElseThrow(() -> new EntityNotFoundException("Bill not found: " + request.getBillId()));
+            bill.setPayment(saved);
+            billRepository.save(bill);
+        }
+        return toResponse(repository.findById(saved.getId()).orElse(saved));
     }
 
     public PaymentResponse update(Long id, PaymentUpdateRequest request) {

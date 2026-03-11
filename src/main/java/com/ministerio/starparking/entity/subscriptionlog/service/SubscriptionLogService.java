@@ -41,7 +41,7 @@ public class SubscriptionLogService {
         entity.setClient(client);
         entity.setSubscription(subscription);
         entity.setStartsAt(request.getStartsAt());
-        entity.setEndsAt(request.getEndsAt());
+        entity.setEndsAt(request.getStartsAt().plusDays(subscription.getDayDuration().longValue()));
         entity.setSubscriptionStatus(request.getSubscriptionStatus());
         return toResponse(repository.save(entity));
     }

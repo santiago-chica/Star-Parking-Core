@@ -55,6 +55,15 @@ public class ParkingUseService {
     public ParkingUseResponse update(Long id, ParkingUseUpdateRequest request) {
         ParkingUse entity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("ParkingUse not found: " + id));
+        if (request.getVehicleId() != null) {
+            entity.setVehicle(vehicleRepository.findById(request.getVehicleId())
+                    .orElseThrow(() -> new EntityNotFoundException("Vehicle not found: " + request.getVehicleId())));
+        }
+        if (request.getParkingSpotId() != null) {
+            entity.setParkingSpot(parkingSpotRepository.findById(request.getParkingSpotId())
+                    .orElseThrow(() -> new EntityNotFoundException("ParkingSpot not found: " + request.getParkingSpotId())));
+        }
+        if (request.getEntryTime() != null) entity.setEntryTime(request.getEntryTime());
         if (request.getExitTime() != null) entity.setExitTime(request.getExitTime());
         if (request.getBillId() != null) {
             entity.setBill(billRepository.findById(request.getBillId())

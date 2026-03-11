@@ -33,7 +33,7 @@ public class User {
     private Boolean isActive = true;
 
     @Column(nullable = false)
-    private OffsetDateTime lastSeen;
+    private OffsetDateTime lastSeen = OffsetDateTime.now();
 
     @OneToMany(mappedBy = "user")
     private List<Activity> activities;

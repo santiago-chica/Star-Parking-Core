@@ -15,17 +15,20 @@ public class BillCreateRequest {
     private Long paymentId;
 
     @NotNull
-    @DecimalMin("0.0")
+    @DecimalMin(value = "0.00", inclusive = true)
+    @Digits(integer = 10, fraction = 2)
     private BigDecimal subtotal;
 
     @NotNull
-    @DecimalMin("0.0")
-    @DecimalMax("1.0")
+    @DecimalMin(value = "0.00", inclusive = true)
+    @DecimalMax(value = "1.00", inclusive = true)
+    @Digits(integer = 1, fraction = 4)
     private BigDecimal discount;
 
     @NotNull
-    @DecimalMin("0.0")
-    @DecimalMax("1.0")
+    @DecimalMin(value = "0.00", inclusive = true)
+    @DecimalMax(value = "1.00", inclusive = true)
+    @Digits(integer = 1, fraction = 4)
     private BigDecimal tax;
 
     private BillStatus billStatus = BillStatus.PENDING;

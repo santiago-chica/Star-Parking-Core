@@ -18,8 +18,6 @@ public class SubscriptionLogCreateRequest {
     @NotNull
     private OffsetDateTime startsAt;
 
-    private OffsetDateTime endsAt;
-
     @NotNull
     private SubscriptionStatus subscriptionStatus;
 }

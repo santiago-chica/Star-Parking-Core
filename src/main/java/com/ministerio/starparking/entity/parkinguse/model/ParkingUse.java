@@ -28,8 +28,7 @@ public class ParkingUse {
     private ParkingSpot parkingSpot;
 
     @Column(nullable = false)
-    private OffsetDateTime entryTime;
-    @Column(nullable = false)
+    private OffsetDateTime entryTime = OffsetDateTime.now();
     private OffsetDateTime exitTime;
 
     @Column(
